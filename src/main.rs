@@ -14,8 +14,10 @@ fn main() {
     tracing_subscriber::registry().with(fmt::layer()).init();
     let scope = span!(Level::DEBUG, "main");
     let _enter = scope.enter();
+
     let mut cli = Cli::parse();
     check_cli(&mut cli);
+    
     let regex = match Regex::new(cli.regex.join("|").as_str()){
         Ok(re) => re,
         Err(err) => {
@@ -24,11 +26,8 @@ fn main() {
         }
     };
     info!("The regex now is {}", regex.as_str());
-    for path in cli.path{
 
-        if cli.verbose{
-            println!("Now search in path : {}",path);
-        }
+    for path in cli.path{
         info!("The path to be searched now is {}",path);
         match find(path,&regex) {
             Ok(mut matches) => {
