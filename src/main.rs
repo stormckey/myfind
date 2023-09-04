@@ -1,20 +1,23 @@
 mod cli;
 mod util;
-// use tracing::{span,Level};
 use clap::Parser;
 use std::process;
 use util::find;
-use util::get_regex;
+use regex::Regex;
 use cli::check_cli;
 use colored::*;
 use cli::Cli;
 
 fn main() {
-    // let span = span!(Level::TRACE,"my span");
-    // let span = span.enter();
     let mut cli = Cli::parse();
     check_cli(&mut cli);
-    let regex = get_regex(cli.regex);
+    let regex = match Regex::new(cli.regex.join("|").as_str()){
+        Ok(re) => re,
+        Err(err) => {
+            eprintln!("illegal regex: {}", err);
+            process::exit(1);
+        }
+    };
     for path in cli.path{
 
         if cli.verbose{

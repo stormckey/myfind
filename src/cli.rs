@@ -1,5 +1,4 @@
 use clap::Parser;
-use std::process;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -16,15 +15,11 @@ pub struct Cli {
     #[arg(short, long)]
     pub asc: bool,
 
-    #[arg(short, long)]
+    #[arg(short, long, conflicts_with = "asc")]
     pub desc: bool,
 }
 
 pub fn check_cli(cli: &mut Cli) {
-    if cli.asc && cli.desc{
-        eprintln!("Cant print by asc and desc at the same time.");
-        process::exit(1);
-    }
     if cli.path.is_empty(){
         cli.path = vec![".".to_string()];
         if cli.verbose{

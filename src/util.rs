@@ -1,6 +1,5 @@
 use std::fs;
 use regex::Regex;
-use std::process;
 use std::path::Path;
 
 pub fn find<P: AsRef<Path>>(root: P, regex: &Regex) -> Result<Vec<String>, Box<dyn std::error::Error>>{
@@ -28,16 +27,4 @@ fn walk_tree(
         }
     }
     Ok(())
-}
-
-pub fn get_regex(regexes: Vec<String>) -> Regex{
-    let regex = regexes.join("|");
-    let regex = match Regex::new(&regex){
-        Ok(re) => re,
-        Err(err) => {
-            eprintln!("illegal regex '{}': {}",regex, err);
-            process::exit(1);
-        }
-    };
-    regex
 }
